@@ -4,5 +4,117 @@
 </head>
 <body style="margin: 0px;background: #0e0e0e;">
 <img style="-webkit-user-select: none;margin: auto;" src="http://103.208.180.37:8090/mjpg/1/video.mjpg" width="386" height="217">
+<!-- 選取圖片的 input -->
+<label for="upload">選擇上傳圖檔</label>
+<input id="upload" type="file" accept="image/*" @change="showFile">
+
+<!-- 圖片標題 -->
+<label for="title">圖片名稱</label>
+<input class="form-control" id="title" type="text" v-model="title" @keyup.13="submit" required>
+
+<!-- 圖片描述 -->
+<label for="des">圖片描述</label>
+<input class="form-control" id="des" type="text" v-model="des" @keyup.13="submit" required>
+
+<!-- 上傳按鈕 -->
+<button class="btn btn-primary" type="button" @click="submit">上傳</button>
+
+<div id="list">
+	<ul v-for="(item, index) in list">  <!--將Album內的list擷取進item、並透過index進行編號-->
+		<li>
+		({{index}})	<!-- 注意要雙大括號 -->
+			<li> 
+				Name:{{ item.name }} <!-- 注意要雙大括號 -->
+			</li>
+			<li> 
+				url: {{ item.link }} <!-- 注意要雙大括號 -->
+			</li>
+		</li>
+	</ul>
+</div>
+
+<div id="i1">
+</div>
+<div id="i2"></div>
+
+<!-- 引用js -->
+<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+<script src="https://unpkg.com/vue/dist/vue.js"></script>
+
+<script> 
+const id = 'ad104321b3149d7'; // 填入 App 的 Client ID
+const token = '72a55dc763ebb5f09cc5f6a27140f1ecfd6a9200'; // 填入 token
+const album = 'g8sH8Aq'; // 相簿的 ID
+
+//Load 
+const list = new Vue({
+  el: '#list',
+  data: {
+    user: "user",
+    list: null, // 準備存 ajax 後來的資料
+    settingsList: {
+      "async": true,
+      "crossDomain": true,
+      "url": "https://api.imgur.com/3/album/" + album + "/images",
+      "method": "GET",
+      "headers": {
+        "Authorization": 'Bearer ' + token
+      }
+    }
+  },
+  mounted() {
+    
+	const self = this;
+    $.ajax(self.settingsList).done(function(res) {
+      console.log(res.data); // 回傳該相簿裡的圖片資料
+      self.list = res.data;  // list 就是資料了，之後用 v-for 就可以倒出來
+    });
+	
+	//每5秒更新一次
+	/*
+	window.setInterval(function(){
+	$.ajax(self.settingsList).done(function(res) {
+      console.log(res.data); // 回傳該相簿裡的圖片資料
+      self.list = res.data;
+    });	}, 5000)
+	*/
+  }
+});
+</script>
+<script>
+setTimeout(refreshImg, 1000);//1秒後讀取(Load)圖片
+setTimeout(setLoop, 1000);//1秒後開始每5秒更新一次
+var List_preLength=0;
+function refreshImg(){//若有新圖片則顯示出來
+	console.log("List_preLength=",List_preLength)
+	if(list.list){
+		console.log("list.list.length=",list.list.length)
+		if(list.list.length>List_preLength){
+			for (i=List_preLength;i<list.list.length;i++){
+				console.log("for-loop")
+				var img = document.createElement("img");
+				img.src = list.list[i].link;
+				var src = document.getElementById("i1");
+				var para = document.createElement("P");  
+				var para2 = document.createElement("P");  
+				var title = document.createTextNode(list.list[i].title)
+				var description = document.createTextNode(list.list[i].description)
+				para.appendChild(title);
+				para2.appendChild(description);
+				src.appendChild(img);
+				src.appendChild(para);
+				src.appendChild(para2);
+			}
+			List_preLength=list.list.length;
+		}
+	}else{
+		console.log("list not exist yet");
+	}
+}
+function setLoop(){
+	window.setInterval(refreshImg, 5000);//5秒更新一次圖片
+}
+</script>
+
 </body>
 </html>
