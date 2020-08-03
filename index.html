@@ -30,19 +30,6 @@
 	</div>
 </div>
 
-<div id="list">
-	<div v-for="(item, index) in list">  <!--將Album內的list擷取進item、並透過index進行編號-->
-		<li>
-		({{index}})	<!-- 注意要雙大括號 -->
-			<li> 
-				Name:{{ item.name }} <!-- 注意要雙大括號 -->
-			</li>
-			<li> 
-				url: {{ item.link }} <!-- 注意要雙大括號 -->
-			</li>
-		</li>
-	</div>
-</div>
 <!-- 引用js -->
 <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
 <script src="https://unpkg.com/vue/dist/vue.js"></script>
