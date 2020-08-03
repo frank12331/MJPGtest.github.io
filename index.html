@@ -1,26 +1,31 @@
-<html>
-<head>
-<meta name="viewpoint" content="width=device-width, minimum-scale=0.1">
-<title>Wound Analysis Terminal</title>
-<link rel="icon" href="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTQHLzPBuG9dgk8apuBr8pYfdfgQpnvLdGy6w&usqp=CAU">
-</head>
-<!-- 選取圖片的 input -->
-<label for="upload">選擇上傳圖檔</label>
-<input id="upload" type="file" accept="image/*" @change="showFile">
+<div id="title">
+      <strong>Wound analysis Platform</strong>
+</div>
 
-<!-- 圖片標題 -->
-<label for="title">圖片名稱</label>
-<input class="form-control" id="title" type="text" v-model="title" @keyup.13="submit" required>
 
-<!-- 圖片描述 -->
-<label for="des">圖片描述</label>
-<input class="form-control" id="des" type="text" v-model="des" @keyup.13="submit" required>
+<div class="tabs">
+<div class="tab"><div class="label">病人資訊</div></div>
+<div class="tab"><div class="label">傷口資訊</div></div>
+<div class="tab active"><div class="label">傷口分析</div></div>
+<div class="tab"><div class="label">影像記錄</div></div>
 
-<!-- 上傳按鈕 -->
-<button class="btn btn-primary" type="button" @click="submit">上傳</button>
+</div>
+
+<div id="wrap">
+	<div>
+		<p class="imageTitle">實際影像</p>
+		<img src=https://i.imgur.com/rsNzlrx.png class="two">
+		<p class="imageTitle">test</p>
+	</div>
+	<div>
+		<p class="imageTitle">判斷結果</p>
+		<img src=https://i.imgur.com/yO1qFYt.png class="two">
+		<p class="imageTitle">test</p>
+	</div>
+</div>
 
 <div id="list">
-	<ul v-for="(item, index) in list">  <!--將Album內的list擷取進item、並透過index進行編號-->
+	<div v-for="(item, index) in list">  <!--將Album內的list擷取進item、並透過index進行編號-->
 		<li>
 		({{index}})	<!-- 注意要雙大括號 -->
 			<li> 
@@ -30,21 +35,81 @@
 				url: {{ item.link }} <!-- 注意要雙大括號 -->
 			</li>
 		</li>
-	</ul>
+	</div>
 </div>
-
-<div id="i1">
-</div>
-<div id="i2"></div>
-</body>
-</html>
-
-
 <!-- 引用js -->
 <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
 <script src="https://unpkg.com/vue/dist/vue.js"></script>
 
-<script> 
+<div id="i1">
+</div>
+<div id="i2"></div>
+
+<style>
+#title{
+    background-color: #34495E; /* 告訴電腦背景顏色 */
+    padding: 16px 0 16px 24px; /* 告訴電腦內距要多大 */
+    border-left: 8px solid #41B883; /* 告訴電腦左邊框要多寬、跟顏色 */
+    color: #ffffff !important; /* 告訴電腦文字顏色 */
+}
+
+/* 梯形分頁 */
+.tabs {
+  display: flex;
+  flex-direction: row;
+  margin-top: 10px;
+}
+.tab {
+    height: 0;
+    width: 120px;
+    border-bottom: 30px solid #CCCCCC;
+    border-right: 20px solid transparent;
+    border-top-left-radius: 5px;
+    box-sizing: border-box;
+    display: block;
+}
+.tab:not(:first-child) {
+    margin-left: 0px;
+    z-index: 0;
+}
+.tab .label{
+  padding-top: 6px;
+  padding-left: 10px;
+  text-align: center;
+  color: #444444;
+  font-family:微軟正黑體; 
+}
+.active {
+  border-bottom: 30px solid #41B883;
+  z-index: 10;
+  
+}
+.active .label{
+  color: #ffffff;
+}
+
+/* 圖片顯示區 */
+#wrap{
+  display: flex;
+  justify-content: space-around;
+  border: 1px solid #444444;
+  background-color: #34495E;
+}
+.two{
+  width: 40vw;
+  /*height: 40vh;*/
+  border: 1px solid;
+}
+.imageTitle{
+  font-family:微軟正黑體; 
+  text-align: center;
+  color: #ffffff;
+}
+</style>
+
+
+
+<script>
 const id = 'ad104321b3149d7'; // 填入 App 的 Client ID
 const token = '72a55dc763ebb5f09cc5f6a27140f1ecfd6a9200'; // 填入 token
 const album = 'g8sH8Aq'; // 相簿的 ID
@@ -72,19 +137,8 @@ const list = new Vue({
       console.log(res.data); // 回傳該相簿裡的圖片資料
       self.list = res.data;  // list 就是資料了，之後用 v-for 就可以倒出來
     });
-	
-	//每5秒更新一次
-	/*
-	window.setInterval(function(){
-	$.ajax(self.settingsList).done(function(res) {
-      console.log(res.data); // 回傳該相簿裡的圖片資料
-      self.list = res.data;
-    });	}, 5000)
-	*/
   }
 });
-</script>
-<script>
 setTimeout(refreshImg, 1000);//1秒後讀取(Load)圖片
 setTimeout(setLoop, 1000);//1秒後開始每5秒更新一次
 var List_preLength=0;
@@ -118,13 +172,3 @@ function setLoop(){
 	window.setInterval(refreshImg, 5000);//5秒更新一次圖片
 }
 </script>
-<!--
-<html>
-<head>
-<meta name="viewpoint" content="width=device-width, minimum-scale=0.1">
-</head>
-<body style="margin: 0px;background: #0e0e0e;">
-<img style="-webkit-user-select: none;margin: auto;" src="http://103.208.180.37:8090/mjpg/1/video.mjpg" width="386" height="217">
-</body>
-</html>
--->
